@@ -1,4 +1,5 @@
-﻿using SmartFridgeAPI.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartFridgeAPI.Models;
 
 namespace SmartFridgeAPI.DataBaseManagement
 {
@@ -48,6 +49,17 @@ namespace SmartFridgeAPI.DataBaseManagement
                     item.Статус = status;
                     await db.SaveChangesAsync();
                 }                
+            }
+        }
+
+        //Получение списка покупок
+        public static async Task<ActionResult<List<СпискиПокупок>>> GetProductsFromFridge(int fridgeId)
+        {
+            using (SmartFridgeContext db = new SmartFridgeContext())
+            {
+                var productsList = (from p in db.СпискиПокупокs where p.IdХолодильника == fridgeId select p).ToList();
+                return new ActionResult<List<СпискиПокупок>>(productsList);
+
             }
         }
     }

@@ -75,6 +75,24 @@ namespace SmartFridgeAPI.DataBaseManagement
 
             }
         }
+        
+        public static async void UpdateProductCount(int fridgeId, int productId, int остаток)
+        {
+            using (SmartFridgeContext db = new SmartFridgeContext())
+            {
+                var product = (from p in db.ПродуктыВХолодильникеs
+                               where p.IdПродукта == productId
+                               select p).FirstOrDefault();
+                if (product != null )
+                {
+                    if(product.Остаток!=null)
+                         product.Остаток -= остаток;
+                  
+                }
+                await db.SaveChangesAsync();
+
+            }
+        }
 
     }
 }

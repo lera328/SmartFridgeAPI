@@ -31,5 +31,12 @@ namespace SmartFridgeAPI.Controllers
             UsersListsManager.changeProductFromList(fridgeId, startProductName, productName, status);
             return Ok();
         }
+
+        //Получение списка покупок
+        [HttpGet, ActionName("GetProductsFromList")]
+        public Task<ActionResult<List<СпискиПокупок>>> GetProduct(int fridgeId)
+        {
+            return UsersListsManager.GetProductsFromFridge(fridgeId);
+        }
     }
 }
