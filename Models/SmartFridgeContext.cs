@@ -27,6 +27,8 @@ public partial class SmartFridgeContext : DbContext
 
     public virtual DbSet<Рецепты> Рецептыs { get; set; }
 
+    public virtual DbSet<СпискиПокупок> СпискиПокупокs { get; set; }
+
     public virtual DbSet<УпотребленныеПродукты> УпотребленныеПродуктыs { get; set; }
 
     public virtual DbSet<Холодильники> Холодильникиs { get; set; }
@@ -117,6 +119,7 @@ public partial class SmartFridgeContext : DbContext
 
             entity.HasOne(d => d.IdХолодильникаNavigation).WithMany(p => p.ПродуктыВХолодильникеs)
                 .HasForeignKey(d => d.IdХолодильника)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Продукты_в_холодильнике_Холодильники");
         });
 
@@ -137,6 +140,19 @@ public partial class SmartFridgeContext : DbContext
                 .HasForeignKey(d => d.IdПользователя)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Рецепты_Пользователи");
+        });
+
+        modelBuilder.Entity<СпискиПокупок>(entity =>
+        {
+            entity.HasKey(e => e.IdСпПродукта);
+
+            entity.ToTable("Списки покупок");
+
+            entity.Property(e => e.IdСпПродукта)
+                .ValueGeneratedNever()
+                .HasColumnName("id_сп_продукта");
+            entity.Property(e => e.IdХолодильника).HasColumnName("id_холодильника");
+            entity.Property(e => e.Наименование).IsUnicode(false);
         });
 
         modelBuilder.Entity<УпотребленныеПродукты>(entity =>
