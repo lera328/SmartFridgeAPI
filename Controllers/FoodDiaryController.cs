@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FatSecretDotNet.ResponseObjects;
+using Microsoft.AspNetCore.Mvc;
 using SmartFridgeAPI.DataBaseManagement;
+using SmartFridgeAPI.FatSecretApi;
 using SmartFridgeAPI.Models;
 
 namespace SmartFridgeAPI.Controllers
@@ -12,6 +14,12 @@ namespace SmartFridgeAPI.Controllers
         public Task<ActionResult<List<УпотребленныеПродукты>>> GetDiary(int userId, DateOnly date)
         {
             return FoodDiaryManager.GetFoodDiary(userId, date);
+        }
+        
+        [HttpGet, ActionName("TEST")]
+        public FoodsSearchResponse GetTEST()
+        {
+            return Test.get();
         }
 
         // POST api/users

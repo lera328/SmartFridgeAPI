@@ -22,6 +22,14 @@ namespace SmartFridgeAPI.Controllers
             FridgeManager.AddProductToFridge(fridgeId, name);
             return Ok();
         }
+
+       // POST api/users
+        [HttpPost, ActionName("PostProductFromQr")]
+        public async Task<ActionResult<ПродуктыВХолодильнике>> PostProductFromQr(int fridgeId, string qr)
+        {
+            FridgeManager.AddProductFromRecipeToFridge(fridgeId, qr);
+            return Ok();
+        }
        
 
         //Удаление продукта  из холодильника

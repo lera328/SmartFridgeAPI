@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartFridgeAPI.Models;
+using SmartFridgeAPI.ProverkaCheka;
 
 namespace SmartFridgeAPI.DataBaseManagement
 {
@@ -92,6 +93,38 @@ namespace SmartFridgeAPI.DataBaseManagement
                 await db.SaveChangesAsync();
 
             }
+        }
+
+        //Добавление продуктов сканированием чека
+        public static async void AddProductFromRecipeToFridge(int fridgeId, string qr)
+        {
+            
+            Receipt receipt = await GetReciept(qr);
+            List<Product> products = receipt.Goods;
+            using (SmartFridgeContext db = new SmartFridgeContext())
+            {
+                foreach (Product pr in products)
+                {
+                    int id = (from p in db.ПродуктыВХолодильникеs select p.IdПродукта).Max() + 1;
+                    ПродуктыВХолодильнике product = new ПродуктыВХолодильнике
+                    {
+                        IdПродукта = id,
+                        IdХолодильника = fridgeId,
+                        Наименование = pr.Name,
+                        ДатаДобавления = DateOnly.FromDateTime(DateTime.Now),
+                        СрокГодности = expirationDate
+
+                    };
+                    db.ПродуктыВХолодильникеs.Add(product);
+                    await db.SaveChangesAsync();
+                }
+                
+            }
+        }
+        private static async Task<Receipt> GetReciept(string qrRaw)
+        {
+            Proverkacheka p = new Proverkacheka();
+            return await p.GetAsyncByRaw(qrRaw);
         }
 
     }
